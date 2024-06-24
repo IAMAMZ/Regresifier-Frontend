@@ -5,6 +5,7 @@ import { useState } from "react";
 export default function Home() {
 
   const [file, setFile] = useState<File | null>(null);
+  const [columns, setColumns] = useState<string[]>([]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,6 +23,9 @@ export default function Home() {
       // handle error
       if (!res.ok) throw new Error(await res.text());
 
+      const result = await res.json();
+      setColumns(result.columns);
+
     } catch (e: any) {
       console.error(e);
     }
@@ -37,6 +41,16 @@ export default function Home() {
         />
         <input type="submit" value="Upload" />
       </form>
+      {columns.length > 0 && (
+        <div>
+          <h2>CSV Columns:</h2>
+          <ul>
+            {columns.map((column, index) => (
+              <li key={index}>{column}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </main>
   );
 }
