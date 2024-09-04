@@ -1,11 +1,13 @@
 'use client'
 
+import Button from "@/components/Button";
 import { useState } from "react";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [columns, setColumns] = useState<string[]>([]);
   const [xColumns, setXColumns] = useState<string[]>([]);
+  const [ySelectOptions,setySelectOptions] = useState<string[]>([]);
   const [yColumn, setYColumn] = useState<string>('');
   const [equation, setEquation] = useState<string>('');
 
@@ -72,33 +74,39 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center gap-10 p-24">
+      <div>
+        <p>Welcome to Regressifier, where you can quickly run a least squares Linear Regression from your csv file</p>
+      </div>
       <form onSubmit={onSubmit}>
         <input
           type="file"
           name="file"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
         />
-        <input type="submit" value="Upload" />
+        <Button type="submit" label="Upload" className="text-white" />
       </form>
       {columns.length > 0 && (
         <div>
-          <h2>Select Variables:</h2>
-          <div>
-            <h3>X Variables:</h3>
+          <h2 className="font-bold text-xl">Select Variables:</h2>
+          <div className="flex items-center gap-4 mt-2">
+            <h3 className="font-bold text-lg">X Variables:</h3>
             {columns.map((column, index) => (
+              <div className="flex gap-4">
               <label key={index}>
                 <input
                   type="checkbox"
+                  className="scale-110 mr-2 "
                   checked={xColumns.includes(column)}
                   onChange={() => handleXColumnChange(column)}
                 />
                 {column}
               </label>
+              </div>
             ))}
           </div>
-          <div>
-            <h3>Y Variable:</h3>
+          <div className="flex gap-8 mt-3">
+            <h3 className="font-bold">Y Variable:</h3>
             <select value={yColumn} onChange={(e) => setYColumn(e.target.value)}>
               <option value="">Select Y Variable</option>
               {columns.map((column, index) => (
@@ -106,7 +114,7 @@ export default function Home() {
               ))}
             </select>
           </div>
-          <button onClick={runRegression}>Run Regression</button>
+          <button className="bg-slate-400 rounded-sm p-2 text-white mt-4" onClick={runRegression}>Run Regression</button>
         </div>
       )}
       {equation && (
